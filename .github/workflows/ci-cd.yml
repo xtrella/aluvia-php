@@ -30,7 +30,6 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           extensions: curl, json
-          coverage: xdebug
 
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
@@ -64,15 +63,7 @@ jobs:
           fi
 
       - name: Run tests
-        run: ./vendor/bin/phpunit --coverage-clover coverage.xml
-
-      - name: Upload coverage to Codecov
-        if: matrix.php-version == '8.1'
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.xml
-          fail_ci_if_error: false
+        run: ./vendor/bin/phpunit
 
   validate:
     name: Validate Package

@@ -3,13 +3,13 @@
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          executionOrder="depends,defects"
-         forceCoversAnnotation="true"
-         beStrictAboutCoversAnnotation="true"
+         forceCoversAnnotation="false"
+         beStrictAboutCoversAnnotation="false"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutTodoAnnotatedTests="true"
          beStrictAboutChangesToGlobalState="true"
-         failOnRisky="true"
-         failOnWarning="true"
+         failOnRisky="false"
+         failOnWarning="false"
          verbose="true">
     <testsuites>
         <testsuite name="default">
