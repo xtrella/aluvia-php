@@ -16,13 +16,21 @@
     "sticky-sessions",
     "smart-routing"
   ],
+  "homepage": "https://github.com/xtrella/aluvia-php",
   "license": "MIT",
   "authors": [
     {
       "name": "Xtrella Team",
-      "email": "support@xtrella.com"
+      "email": "support@xtrella.com",
+      "homepage": "https://xtrella.com"
     }
   ],
+  "support": {
+    "email": "support@xtrella.com",
+    "issues": "https://github.com/xtrella/aluvia-php/issues",
+    "source": "https://github.com/xtrella/aluvia-php",
+    "docs": "https://github.com/xtrella/aluvia-php/blob/main/README.md"
+  },
   "require": {
     "php": ">=7.4"
   },

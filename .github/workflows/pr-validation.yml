@@ -1,0 +1,124 @@
+name: Pull Request Validation
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [main, develop]
+
+jobs:
+  validate:
+    name: Validate PR
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          extensions: curl, json
+
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run syntax check
+        run: find src -name "*.php" -exec php -l {} \;
+
+      - name: Run tests
+        run: ./vendor/bin/phpunit
+
+      - name: Check autoloading
+        run: composer dump-autoload --optimize --strict-psr
+
+      - name: Validate package structure
+        run: |
+          echo "✅ Checking package structure..."
+          if [ -d "src" ]; then
+            echo "✅ src directory exists"
+          else
+            echo "❌ src directory missing"
+            exit 1
+          fi
+
+          if [ -f "composer.json" ]; then
+            echo "✅ composer.json exists"
+          else
+            echo "❌ composer.json missing"
+            exit 1
+          fi
+
+          if [ -f "README.md" ]; then
+            echo "✅ README.md exists"
+          else
+            echo "❌ README.md missing"
+            exit 1
+          fi
+
+      - name: Comment PR Success
+        if: success()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ **All checks passed!** \n\n- Composer validation: ✅\n- Syntax check: ✅\n- Tests: ✅\n- Autoloading: ✅\n- Package structure: ✅\n\nReady for review! 🚀'
+            })
+
+      - name: Comment PR Failure
+        if: failure()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ **Some checks failed** \n\nPlease review the workflow logs and fix the issues before requesting review.'
+            })
+
+  compatibility-check:
+    name: PHP Compatibility Check
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+
+    strategy:
+      matrix:
+        php-version: [7.4, 8.0, 8.1, 8.2, 8.3]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: curl, json
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+
+      - name: Run tests on PHP ${{ matrix.php-version }}
+        run: ./vendor/bin/phpunit
+
+      - name: Check package size
+        run: |
+          PACKAGE_SIZE=$(du -sk . --exclude=vendor --exclude=.git | cut -f1)
+          echo "Package size: ${PACKAGE_SIZE}KB (excluding vendor and .git)"
+
+          if [ $PACKAGE_SIZE -gt 1024 ]; then
+            echo "⚠️ Package size is larger than 1MB (${PACKAGE_SIZE}KB)"
+            echo "Consider reviewing large files"
+          else
+            echo "✅ Package size is acceptable"
+          fi

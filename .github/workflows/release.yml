@@ -1,0 +1,86 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          extensions: curl, json
+
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress --no-dev
+
+      - name: Run tests
+        run: ./vendor/bin/phpunit
+
+      - name: Get tag version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Generate changelog
+        id: changelog
+        run: |
+          if [ -f CHANGELOG.md ]; then
+            echo "Reading changelog from CHANGELOG.md"
+            # Extract changelog for this version (basic implementation)
+            CHANGELOG=$(sed -n "/## \[${{ steps.get_version.outputs.VERSION }}\]/,/## \[/p" CHANGELOG.md | head -n -1 | tail -n +2)
+          else
+            echo "No CHANGELOG.md found, generating basic changelog"
+            CHANGELOG="Release ${{ steps.get_version.outputs.VERSION }}"
+          fi
+
+          # Save multiline output
+          echo "CHANGELOG<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          release_name: Release ${{ steps.get_version.outputs.VERSION }}
+          body: |
+            ## Changes in ${{ steps.get_version.outputs.VERSION }}
+
+            ${{ steps.changelog.outputs.CHANGELOG }}
+
+            ## Installation
+
+            ```bash
+            composer require xtrella/aluvia-php-sdk:${{ steps.get_version.outputs.VERSION }}
+            ```
+
+            ## Documentation
+
+            See the [README](https://github.com/xtrella/aluvia-php/blob/main/README.md) for usage instructions.
+          draft: false
+          prerelease: false
+
+  notify-packagist:
+    name: Notify Packagist
+    runs-on: ubuntu-latest
+    needs: release
+
+    steps:
+      - name: Notify Packagist
+        run: |
+          echo "📦 Packagist will automatically detect the new tag within a few minutes"
+          echo "If you've set up a webhook, the package will update automatically"
+          echo "Otherwise, you may need to manually update it at https://packagist.org/packages/xtrella/aluvia-php-sdk"

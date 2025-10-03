@@ -1,5 +1,11 @@
 # Aluvia PHP SDK
 
+[![Latest Stable Version](https://poser.pugx.org/xtrella/aluvia-php-sdk/v/stable)](https://packagist.org/packages/xtrella/aluvia-php-sdk)
+[![Total Downloads](https://poser.pugx.org/xtrella/aluvia-php-sdk/downloads)](https://packagist.org/packages/xtrella/aluvia-php-sdk)
+[![License](https://poser.pugx.org/xtrella/aluvia-php-sdk/license)](https://packagist.org/packages/xtrella/aluvia-php-sdk)
+[![PHP Version Require](https://poser.pugx.org/xtrella/aluvia-php-sdk/require/php)](https://packagist.org/packages/xtrella/aluvia-php-sdk)
+[![CI/CD Pipeline](https://github.com/xtrella/aluvia-php/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/xtrella/aluvia-php/actions/workflows/ci-cd.yml)
+
 Official PHP SDK for the Aluvia proxy management API. This lightweight SDK provides easy access to Aluvia's proxy services with no external dependencies.
 
 ## Requirements
