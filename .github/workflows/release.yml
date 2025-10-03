@@ -22,11 +22,20 @@ jobs:
           php-version: 8.1
           extensions: curl, json
 
-      - name: Install dependencies
-        run: composer install --prefer-dist --no-progress --no-dev
+      - name: Validate composer.json
+        run: composer validate --strict
+
+      - name: Install dependencies with dev packages
+        run: composer install --prefer-dist --no-progress
 
       - name: Run tests
         run: ./vendor/bin/phpunit
+
+      - name: Test production install (without dev dependencies)
+        run: |
+          rm -rf vendor/
+          composer install --prefer-dist --no-progress --no-dev
+          echo "Production dependencies installed successfully"
 
       - name: Get tag version
         id: get_version
