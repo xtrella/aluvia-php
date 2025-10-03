@@ -39,12 +39,21 @@ jobs:
         uses: actions/cache@v3
         with:
           path: vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-php-
+            ${{ runner.os }}-php-${{ matrix.php-version }}-
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
+        run: |
+          composer install --prefer-dist --no-progress --no-suggest
+          echo "Composer install completed with exit code: $?"
+
+      - name: Debug vendor directory
+        run: |
+          echo "Contents of vendor/bin:"
+          ls -la vendor/bin/ || echo "vendor/bin directory not found"
+          echo "PHPUnit executable check:"
+          ls -la vendor/bin/phpunit || echo "PHPUnit not found"
 
       - name: Run code style checks
         run: |
@@ -63,7 +72,13 @@ jobs:
           fi
 
       - name: Run tests
-        run: ./vendor/bin/phpunit
+        run: |
+          if [ -f "./vendor/bin/phpunit" ]; then
+            ./vendor/bin/phpunit
+          else
+            echo "PHPUnit not found, trying alternative methods..."
+            composer exec phpunit || php vendor/phpunit/phpunit/phpunit
+          fi
 
   validate:
     name: Validate Package
