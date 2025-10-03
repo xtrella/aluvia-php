@@ -51,6 +51,15 @@
   "prefer-stable": true,
   "config": {
     "optimize-autoloader": true,
-    "sort-packages": true
+    "sort-packages": true,
+    "allow-plugins": {
+      "composer/package-versions-deprecated": true
+    }
+  },
+  "scripts": {
+    "test": "phpunit",
+    "test-coverage": "phpunit --coverage-html coverage",
+    "post-install-cmd": "composer dump-autoload --optimize",
+    "post-update-cmd": "composer dump-autoload --optimize"
   }
 }

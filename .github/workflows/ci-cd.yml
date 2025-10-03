@@ -122,26 +122,3 @@ jobs:
           else
             echo "Security checker not installed, skipping security audit"
           fi
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        continue-on-error: true
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
-          body: |
-            ## What's Changed
-
-            See [CHANGELOG.md](https://github.com/xtrella/aluvia-php/blob/main/CHANGELOG.md) for detailed changes.
-
-            ## Installation
-
-            ```bash
-            composer require xtrella/aluvia-php-sdk:${{ github.ref_name }}
-            ```
-
-            ## Documentation
-
-            Visit our [GitHub repository](https://github.com/xtrella/aluvia-php) for complete documentation and examples.
-          draft: false
-          prerelease: false
