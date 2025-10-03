@@ -1,0 +1,48 @@
+{
+  "name": "xtrella/aluvia-php-sdk",
+  "type": "library",
+  "description": "Official Aluvia proxy management SDK for PHP",
+  "keywords": [
+    "proxy",
+    "aluvia",
+    "http",
+    "https",
+    "sdk",
+    "api",
+    "php",
+    "proxy-management",
+    "web-scraping",
+    "rotating-proxy",
+    "sticky-sessions",
+    "smart-routing"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Xtrella Team",
+      "email": "support@xtrella.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Aluvia\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Aluvia\\Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  }
+}
