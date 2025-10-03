@@ -29,7 +29,7 @@ tmp/
 coverage/
 
 # Composer
-composer.lock
+# composer.lock - included for libraries to ensure consistent dependency versions
 
 # Environment files
 .env
@@ -39,3 +39,4 @@ composer.lock
 # Test outputs
 /tests/output/
 phpunit.xml.dist
+.phpunit.result.cache
