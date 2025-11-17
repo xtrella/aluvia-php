@@ -45,7 +45,6 @@ try {
         echo "   Proxy " . ($i + 1) . ":\n";
         echo "     Username: " . $proxy->getUsername() . "\n";
         echo "     Sticky: " . ($proxy->getUseSticky() ? 'Yes' : 'No') . "\n";
-        echo "     Smart Routing: " . ($proxy->getUseSmartRouting() ? 'Yes' : 'No') . "\n";
     }
     echo "\n";
 
@@ -56,12 +55,11 @@ try {
 
         echo "Configuring proxy: " . $firstProxy->getUsername() . "\n";
 
-        // Enable both sticky sessions and smart routing
+        // Enable sticky sessions
         $firstProxy->setUseSticky(true);
-        $firstProxy->setUseSmartRouting(true);
         $firstProxy->save();
 
-        echo "✅ Enabled sticky sessions and smart routing\n";
+        echo "✅ Enabled sticky sessions\n";
         echo "Updated URL: " . $firstProxy->toUrl() . "\n";
     }
     echo "\n";
@@ -102,15 +100,13 @@ try {
             // Update using SDK method
             $sdk->update($targetUsername, [
                 'useSticky' => false,
-                'useSmartRouting' => true
             ]);
             echo "✅ Updated proxy configuration via SDK\n";
 
             // Verify the update
             $updatedProxy = $sdk->find($targetUsername);
             if ($updatedProxy) {
-                echo "Verified - Sticky: " . ($updatedProxy->getUseSticky() ? 'Yes' : 'No') .
-                    ", Smart Routing: " . ($updatedProxy->getUseSmartRouting() ? 'Yes' : 'No') . "\n";
+                echo "Verified - Sticky: " . ($updatedProxy->getUseSticky() ? 'Yes' : 'No') . "\n";
             }
         }
     }

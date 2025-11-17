@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial release of Aluvia PHP SDK
 - Complete proxy management functionality
 - Support for proxy creation, deletion, and management
-- Sticky sessions and smart routing features
+- Sticky sessions features
 - Comprehensive usage statistics and monitoring
 - Full cURL integration support
 - Robust error handling with typed exceptions
@@ -32,7 +32,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Proxy Management**: Create, find, update, and delete proxies
 - **Authentication**: Secure API token-based authentication
 - **Usage Statistics**: Track data usage and proxy performance
-- **Smart Routing**: Intelligent proxy routing capabilities
 - **Sticky Sessions**: Session persistence for consistent connections
 - **Error Handling**: Comprehensive exception handling for all error cases
 - **HTTP/HTTPS Support**: Full support for both HTTP and HTTPS proxy connections

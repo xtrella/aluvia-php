@@ -12,20 +12,17 @@ class ProxyCredential
     public string $username;
     public string $password;
     public bool $useSticky;
-    public bool $useSmartRouting;
     public ?string $sessionSalt;
 
     public function __construct(
         string $username,
         string $password,
         bool $useSticky = false,
-        bool $useSmartRouting = false,
         ?string $sessionSalt = null
     ) {
         $this->username = $username;
         $this->password = $password;
         $this->useSticky = $useSticky;
-        $this->useSmartRouting = $useSmartRouting;
         $this->sessionSalt = $sessionSalt;
     }
 }
@@ -122,21 +119,7 @@ class Proxy
         $this->credential->useSticky = $useSticky;
     }
 
-    /**
-     * Check if smart routing is enabled
-     */
-    public function getUseSmartRouting(): bool
-    {
-        return $this->credential->useSmartRouting;
-    }
 
-    /**
-     * Set smart routing enabled/disabled
-     */
-    public function setUseSmartRouting(bool $useSmartRouting): void
-    {
-        $this->credential->useSmartRouting = $useSmartRouting;
-    }
 
     /**
      * Generate a proxy URL for HTTP or HTTPS connections
@@ -182,7 +165,6 @@ class Proxy
 
         $this->sdk->update($this->credential->username, [
             'useSticky' => $this->credential->useSticky,
-            'useSmartRouting' => $this->credential->useSmartRouting,
         ]);
 
         return $this;
@@ -210,7 +192,6 @@ class Proxy
             'httpPort' => $this->getHttpPort(),
             'httpsPort' => $this->getHttpsPort(),
             'useSticky' => $this->getUseSticky(),
-            'useSmartRouting' => $this->getUseSmartRouting(),
         ];
     }
 
@@ -226,16 +207,10 @@ class Proxy
             $username .= "-session-{$this->credential->sessionSalt}";
         }
 
-        // Add smart routing suffix
-        if ($this->credential->useSmartRouting) {
-            $username .= "-routing-smart";
-        }
-
         return new ProxyCredential(
             $username,
             $this->credential->password,
             $this->credential->useSticky,
-            $this->credential->useSmartRouting,
             $this->credential->sessionSalt
         );
     }
@@ -261,7 +236,6 @@ class Proxy
     private function stripUsernameSuffixes(string $username): string
     {
         $username = preg_replace('/-session-[a-zA-Z0-9]+/', '', $username);
-        $username = preg_replace('/-routing-smart/', '', $username);
         return $username;
     }
 }

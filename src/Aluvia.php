@@ -39,7 +39,6 @@ class Aluvia
     {
         return [
             'useSticky' => isset($options['use_sticky']) ? (bool)$options['use_sticky'] : false,
-            'useSmartRouting' => isset($options['use_smart_routing']) ? (bool)$options['use_smart_routing'] : false,
         ];
     }
 
@@ -80,8 +79,7 @@ class Aluvia
             return new ProxyCredential(
                 $cred['username'],
                 $cred['password'],
-                $options['useSticky'],
-                $options['useSmartRouting']
+                $options['useSticky']
             );
         }, $response['data'] ?? []);
     }
@@ -115,8 +113,7 @@ class Aluvia
             $credential = new ProxyCredential(
                 $response['data']['username'],
                 $response['data']['password'],
-                $options['useSticky'],
-                $options['useSmartRouting']
+                $options['useSticky']
             );
 
             $this->credentials[] = $credential;
@@ -154,8 +151,7 @@ class Aluvia
             $credential = new ProxyCredential(
                 $credData['username'],
                 $credData['password'],
-                $options['useSticky'],
-                $options['useSmartRouting']
+                $options['useSticky']
             );
 
             $this->credentials[] = $credential;
@@ -180,7 +176,6 @@ class Aluvia
         $data = [
             'options' => [
                 'use_sticky' => $options['useSticky'] ?? false,
-                'use_smart_routing' => $options['useSmartRouting'] ?? false,
             ]
         ];
 
@@ -194,7 +189,6 @@ class Aluvia
         foreach ($this->credentials as $cred) {
             if ($this->stripUsernameSuffixes($cred->username) === $baseUsername) {
                 $cred->useSticky = $options['useSticky'] ?? $cred->useSticky;
-                $cred->useSmartRouting = $options['useSmartRouting'] ?? $cred->useSmartRouting;
                 break;
             }
         }
@@ -282,7 +276,6 @@ class Aluvia
     private function stripUsernameSuffixes(string $username): string
     {
         $username = preg_replace('/-session-[a-zA-Z0-9]+/', '', $username);
-        $username = preg_replace('/-routing-smart/', '', $username);
         return $username;
     }
 }

@@ -85,9 +85,6 @@ if ($proxy) {
     // Enable sticky sessions
     $proxy->setUseSticky(true);
 
-    // Enable smart routing
-    $proxy->setUseSmartRouting(true);
-
     // Save changes to server
     $proxy->save();
 
@@ -253,8 +250,6 @@ try {
 - `getHttpsPort(): int` - Get HTTPS port
 - `getUseSticky(): bool` - Check if sticky sessions enabled
 - `setUseSticky(bool $useSticky): void` - Enable/disable sticky sessions
-- `getUseSmartRouting(): bool` - Check if smart routing enabled
-- `setUseSmartRouting(bool $useSmartRouting): void` - Enable/disable smart routing
 - `toUrl(string $protocol = 'http'): string` - Generate proxy URL
 - `getUsage(array $options = []): array` - Get usage statistics
 - `save(): self` - Save changes to server

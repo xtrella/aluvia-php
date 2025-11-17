@@ -13,8 +13,7 @@
     "proxy-management",
     "web-scraping",
     "rotating-proxy",
-    "sticky-sessions",
-    "smart-routing"
+    "sticky-sessions"
   ],
   "homepage": "https://github.com/xtrella/aluvia-php",
   "license": "MIT",
