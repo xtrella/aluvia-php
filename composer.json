@@ -1,7 +1,7 @@
 {
   "name": "aluvia-connect/aluvia-php-sdk",
   "type": "library",
-  "description": "Official Aluvia proxy management SDK for PHP",
+  "description": "Aluvia SDK for PHP",
   "keywords": [
     "proxy",
     "aluvia",
