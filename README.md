@@ -4,31 +4,35 @@
 [![Total Downloads](https://poser.pugx.org/xtrella/aluvia-php-sdk/downloads)](https://packagist.org/packages/xtrella/aluvia-php-sdk)
 [![License](https://poser.pugx.org/xtrella/aluvia-php-sdk/license)](https://packagist.org/packages/xtrella/aluvia-php-sdk)
 [![PHP Version Require](https://poser.pugx.org/xtrella/aluvia-php-sdk/require/php)](https://packagist.org/packages/xtrella/aluvia-php-sdk)
-[![CI/CD Pipeline](https://github.com/xtrella/aluvia-php/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/xtrella/aluvia-php/actions/workflows/ci-cd.yml)
 
-Official PHP SDK for the Aluvia proxy management API. This lightweight SDK provides easy access to Aluvia's proxy services with no external dependencies.
+The **official Aluvia PHP SDK**, designed for managing your Aluvia connectivity credentials, retrieving usage data, and integrating mobile network access into PHP applications, backend systems, and automation workflows.
+
+Lightweight, dependency-free, and powered by cURL.
+
+---
 
 ## Requirements
 
-- PHP 7.4 or higher
-- cURL extension (usually enabled by default)
+- PHP **7.4+**
+- cURL extension (enabled by default)
+
+---
 
 ## Installation
 
-### Using Composer
+### Via Composer
 
 ```bash
-composer require xtrella/aluvia-php-sdk
+composer require aluvia-connect/aluvia-php-sdk
 ```
 
 ### Manual Installation
 
-1. Download the SDK files
-2. Include the main index file in your project:
-
 ```php
 require_once 'path/to/aluvia-php-sdk/src/index.php';
 ```
+
+---
 
 ## Quick Start
 
@@ -36,134 +40,120 @@ require_once 'path/to/aluvia-php-sdk/src/index.php';
 <?php
 use Aluvia\Aluvia;
 
-// Create SDK instance with your API token
 $sdk = new Aluvia('your-api-token');
 
-// Get your first available proxy
-$proxy = $sdk->first();
+// Get your first connectivity credential
+$credential = $sdk->first();
 
-if ($proxy) {
-    echo "Proxy URL: " . $proxy->toUrl() . "\n";
-    echo "Username: " . $proxy->getUsername() . "\n";
-    echo "Password: " . $proxy->getPassword() . "\n";
+if ($credential) {
+    echo "Connection URL: " . $credential->toUrl() . "\n";
+    echo "Username: " . $credential->getUsername() . "\n";
+    echo "Password: " . $credential->getPassword() . "\n";
 } else {
-    echo "No proxies available, create one first\n";
+    echo "No credentials available. Create one first.\n";
 }
 ```
+
+---
 
 ## Usage Examples
 
-### Creating Proxies
+---
+
+### Creating Connectivity Credentials
 
 ```php
 <?php
-use Aluvia\Aluvia;
-
 $sdk = new Aluvia('your-api-token');
 
-// Create a single proxy
-$proxies = $sdk->create(1);
-$proxy = $proxies[0];
+// Create a single credential
+$credentials = $sdk->create(1);
+$credential = $credentials[0];
+echo "Created: " . $credential->toUrl() . "\n";
 
-// Create multiple proxies
-$newProxies = $sdk->create(5);
-echo "Created " . count($newProxies) . " new proxies\n";
+// Create multiple
+$list = $sdk->create(5);
+echo "Created " . count($list) . " credentials\n";
 ```
 
-### Finding and Managing Proxies
+---
+
+### Managing Credentials
 
 ```php
 <?php
-use Aluvia\Aluvia;
-
 $sdk = new Aluvia('your-api-token');
 
-// Find a specific proxy by username
-$proxy = $sdk->find('user123');
+$credential = $sdk->find('user123');
 
-if ($proxy) {
-    // Enable sticky sessions
-    $proxy->setUseSticky(true);
+if ($credential) {
+    // Modify settings
+    $credential->setUseSticky(true);
 
-    // Enable smart routing
-    $proxy->setUseSmartRouting(true);
+    // Save changes
+    $credential->save();
 
-    // Save changes to server
-    $proxy->save();
-
-    echo "Updated proxy settings\n";
-}
-
-// Get all proxies
-$allProxies = $sdk->all();
-foreach ($allProxies as $proxy) {
-    echo "Proxy: " . $proxy->getUsername() . "\n";
+    echo "Credential updated.\n";
+} else {
+    echo "Credential not found.\n";
 }
 ```
+
+---
 
 ### Usage Statistics
 
 ```php
 <?php
-use Aluvia\Aluvia;
-
 $sdk = new Aluvia('your-api-token');
+$credential = $sdk->first();
 
-$proxy = $sdk->first();
-if ($proxy) {
-    // Get current usage
-    $usage = $proxy->getUsage();
-    echo "Data used: " . $usage['dataUsed'] . " GB\n";
+if ($credential) {
+    // Current period usage
+    $usage = $credential->getUsage();
+    echo "Used: " . $usage['dataUsed'] . " GB\n";
 
-    // Get usage for specific date range
-    $customUsage = $sdk->getUsage($proxy->getUsername(), [
-        'usageStart' => time() - (7 * 24 * 60 * 60), // 7 days ago
-        'usageEnd' => time()
+    // Custom date range
+    $weekly = $sdk->getUsage($credential->getUsername(), [
+        'usageStart' => time() - (7 * 86400),
+        'usageEnd'   => time(),
     ]);
-    echo "Weekly usage: " . $customUsage['dataUsed'] . " GB\n";
+
+    echo "Weekly usage: " . $weekly['dataUsed'] . " GB\n";
 }
 ```
 
-### Proxy URLs and Authentication
+---
+
+### Connection URLs & Details
 
 ```php
 <?php
-use Aluvia\Aluvia;
+$credential = $sdk->first();
 
-$sdk = new Aluvia('your-api-token');
-
-$proxy = $sdk->first();
-if ($proxy) {
-    // Get HTTP proxy URL
-    $httpUrl = $proxy->toUrl('http');
-    echo "HTTP Proxy: $httpUrl\n";
-
-    // Get HTTPS proxy URL
-    $httpsUrl = $proxy->toUrl('https');
-    echo "HTTPS Proxy: $httpsUrl\n";
-
-    // Get proxy details as array
-    $details = $proxy->toArray();
-    print_r($details);
+if ($credential) {
+    echo "HTTP: " . $credential->toUrl('http') . "\n";
+    echo "HTTPS: " . $credential->toUrl('https') . "\n";
+    print_r($credential->toArray());
 }
 ```
+
+---
 
 ### Using with cURL
 
 ```php
 <?php
-use Aluvia\Aluvia;
+$credential = $sdk->first();
 
-$sdk = new Aluvia('your-api-token');
-$proxy = $sdk->first();
-
-if ($proxy) {
+if ($credential) {
     $ch = curl_init();
+
     curl_setopt_array($ch, [
-        CURLOPT_URL => 'https://httpbin.org/ip',
+        CURLOPT_URL => 'https://ipconfig.io/json',
         CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_PROXY => $proxy->getHost() . ':' . $proxy->getHttpPort(),
-        CURLOPT_PROXYUSERPWD => $proxy->getUsername() . ':' . $proxy->getPassword(),
+        CURLOPT_PROXY => $credential->getHost() . ':' . $credential->getHttpPort(),
+        CURLOPT_PROXYUSERPWD => $credential->getUsername() . ':' . $credential->getPassword(),
         CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
     ]);
 
@@ -174,97 +164,103 @@ if ($proxy) {
 }
 ```
 
-### Deleting Proxies
+---
+
+### Deleting Credentials
 
 ```php
 <?php
-use Aluvia\Aluvia;
+$credential = $sdk->find('user123');
 
-$sdk = new Aluvia('your-api-token');
-
-// Delete a specific proxy
-$proxy = $sdk->find('user123');
-if ($proxy) {
-    $proxy->delete();
-    echo "Proxy deleted successfully\n";
+if ($credential) {
+    $credential->delete();
+    echo "Credential deleted.\n";
 }
 
-// Or delete directly by username
-$sdk->delete('user456');
+$sdk->delete('anotherUser');
 ```
+
+---
 
 ## Error Handling
 
-The SDK uses typed exceptions for different error conditions:
-
 ```php
 <?php
-use Aluvia\Aluvia;
 use Aluvia\Exceptions\AuthenticationException;
+use Aluvia\Exceptions\ValidationException;
 use Aluvia\Exceptions\NetworkException;
 use Aluvia\Exceptions\ApiException;
-use Aluvia\Exceptions\ValidationException;
 use Aluvia\Exceptions\RateLimitException;
 
-$sdk = new Aluvia('your-api-token');
-
 try {
-    $proxy = $sdk->first();
+    $credential = $sdk->first();
 } catch (AuthenticationException $e) {
-    echo "Authentication failed: " . $e->getMessage() . "\n";
-} catch (NetworkException $e) {
-    echo "Network error: " . $e->getMessage() . "\n";
+    echo "Auth error: " . $e->getMessage();
 } catch (RateLimitException $e) {
-    echo "Rate limited. Retry after: " . $e->getRetryAfter() . " seconds\n";
+    echo "Rate limited. Retry in " . $e->getRetryAfter() . "s";
+} catch (NetworkException $e) {
+    echo "Network issue: " . $e->getMessage();
 } catch (ApiException $e) {
-    echo "API error: " . $e->getMessage() . " (Status: " . $e->getStatusCode() . ")\n";
+    echo "API error: " . $e->getMessage();
 } catch (ValidationException $e) {
-    echo "Validation error: " . $e->getMessage() . "\n";
-    print_r($e->getDetails());
+    echo "Invalid request: " . $e->getMessage();
 }
 ```
 
-## API Reference
+---
 
-### Aluvia Class
+# API Reference
 
-#### Constructor
+## Aluvia Class
 
-- `new Aluvia(string $token)` - Create SDK instance with API token
+### Constructor
 
-#### Methods
+```
+new Aluvia(string $token)
+```
 
-- `first(): ?Proxy` - Get the most recently created proxy
-- `find(string $username): ?Proxy` - Find proxy by username
-- `create(int $count = 1): Proxy[]` - Create new proxies
-- `update(string $username, array $options): void` - Update proxy settings
-- `delete(string $username): void` - Delete proxy
-- `all(): Proxy[]` - Get all loaded proxies
-- `getUsage(string $username, array $options = []): array` - Get usage statistics
+### Methods
 
-### Proxy Class
+| Method                                                   | Description                                 |
+| -------------------------------------------------------- | ------------------------------------------- |
+| `first(): ?Proxy`                                        | Get the most recent connectivity credential |
+| `find(string $username): ?Proxy`                         | Find a credential                           |
+| `create(int $count = 1): Proxy[]`                        | Create credentials                          |
+| `update(string $username, array $options): void`         | Update credential settings                  |
+| `delete(string $username): void`                         | Delete credential                           |
+| `all(): Proxy[]`                                         | List all loaded credentials                 |
+| `getUsage(string $username, array $options = []): array` | Usage analytics                             |
 
-#### Methods
+---
 
-- `getUsername(): string` - Get proxy username
-- `getPassword(): string` - Get proxy password
-- `getHost(): string` - Get proxy host
-- `getHttpPort(): int` - Get HTTP port
-- `getHttpsPort(): int` - Get HTTPS port
-- `getUseSticky(): bool` - Check if sticky sessions enabled
-- `setUseSticky(bool $useSticky): void` - Enable/disable sticky sessions
-- `getUseSmartRouting(): bool` - Check if smart routing enabled
-- `setUseSmartRouting(bool $useSmartRouting): void` - Enable/disable smart routing
-- `toUrl(string $protocol = 'http'): string` - Generate proxy URL
-- `getUsage(array $options = []): array` - Get usage statistics
-- `save(): self` - Save changes to server
-- `delete(): void` - Delete this proxy
-- `toArray(): array` - Convert to array
+## Proxy Class (Connectivity Credential)
+
+### Properties & Accessors
+
+- `getUsername(): string`
+- `getPassword(): string`
+- `getHost(): string`
+- `getHttpPort(): int`
+- `getHttpsPort(): int`
+- `getUseSticky(): bool`
+- `setUseSticky(bool $value)`
+
+### Methods
+
+- `toUrl(string $protocol = 'http'): string`
+- `save(): self`
+- `delete(): void`
+- `getUsage(array $options = []): array`
+- `toArray(): array`
+
+---
 
 ## License
 
-MIT License. See LICENSE file for details.
+MIT License
+
+---
 
 ## Support
 
-For support and questions, contact: support@xtrella.com
+For questions or support: **[support@aluvia.io](mailto:support@aluvia.io)**

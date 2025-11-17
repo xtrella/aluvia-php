@@ -1,5 +1,5 @@
 {
-  "name": "xtrella/aluvia-php-sdk",
+  "name": "aluvia-connect/aluvia-php-sdk",
   "type": "library",
   "description": "Official Aluvia proxy management SDK for PHP",
   "keywords": [
@@ -16,20 +16,20 @@
     "sticky-sessions",
     "smart-routing"
   ],
-  "homepage": "https://github.com/xtrella/aluvia-php",
+  "homepage": "https://github.com/aluvia-connect/aluvia-php-sdk",
   "license": "MIT",
   "authors": [
     {
-      "name": "Xtrella Team",
-      "email": "support@xtrella.com",
-      "homepage": "https://xtrella.com"
+      "name": "Aluvia Team",
+      "email": "support@aluvia.io",
+      "homepage": "https://www.aluvia.io/"
     }
   ],
   "support": {
-    "email": "support@xtrella.com",
-    "issues": "https://github.com/xtrella/aluvia-php/issues",
-    "source": "https://github.com/xtrella/aluvia-php",
-    "docs": "https://github.com/xtrella/aluvia-php/blob/main/README.md"
+    "email": "support@aluvia.io",
+    "issues": "https://github.com/aluvia-connect/aluvia-php-sdk/issues",
+    "source": "https://github.com/aluvia-connect/aluvia-php-sdk",
+    "docs": "https://github.com/aluvia-connect/aluvia-php-sdk/blob/main/README.md"
   },
   "require": {
     "php": ">=7.4"
