@@ -53,12 +53,12 @@ jobs:
             ## Installation
 
             ```bash
-            composer require xtrella/aluvia-php-sdk:${{ steps.get_version.outputs.VERSION }}
+            composer require aluvia-connect/aluvia-php-sdk:${{ steps.get_version.outputs.VERSION }}
             ```
 
             ## Documentation
 
-            See the [README](https://github.com/xtrella/aluvia-php/blob/main/README.md) for usage instructions.
+            See the [README](https://github.com/aluvia-connect/aluvia-php-sdk/blob/main/README.md) for usage instructions.
           draft: false
           prerelease: false
 
@@ -72,4 +72,4 @@ jobs:
         run: |
           echo "📦 Packagist will automatically detect the new tag within a few minutes"
           echo "If you've set up a webhook, the package will update automatically"
-          echo "Otherwise, you may need to manually update it at https://packagist.org/packages/xtrella/aluvia-php-sdk"
+          echo "Otherwise, you may need to manually update it at https://packagist.org/packages/aluvia-connect/aluvia-php-sdk"

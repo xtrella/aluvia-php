@@ -9,7 +9,7 @@ declare(strict_types=1);
  *
  * @package Aluvia
  * @version 1.0.0
- * @author Xtrella Team <support@xtrella.com>
+ * @author Aluvia Team <support@aluvia.io>
  * @license MIT
  */
 
